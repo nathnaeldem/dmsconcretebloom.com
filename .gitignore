@@ -1,0 +1,9 @@
+/storage/inquiries.log
+/storage/*.log
+_deploy_ftp.php
+_sync.php
+.env
+.env.*
+*.tmp
+.DS_Store
+Thumbs.db
