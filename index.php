@@ -10,7 +10,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="container hero-banner-grid">
       <div class="hero-banner-copy reveal">
         <span class="hero-pill">Handcrafted Concrete Bloom</span>
-        <h1>Make outdoors feel like a <span>castle</span></h1>
+        <h1>Where concrete becomes <span>art</span></h1>
         <p class="hero-banner-lead">
           Our planters age like stone—heavy, beautiful, and built to outlast cheap plastic that tips, cracks, and fades in Dallas weather.
         </p>
@@ -95,13 +95,9 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <div class="shop-card-body">
               <h3><?php echo htmlspecialchars($p['short']); ?></h3>
-              <p class="shop-meta">
-                Pot <?php echo htmlspecialchars($p['pot_dims']); ?>
-                <?php if (!empty($p['has_base'])): ?>
-                  <br>Base <?php echo htmlspecialchars($p['base_dims']); ?> · with or without base
-                <?php endif; ?>
-              </p>
-              <a class="btn-coral shop-order-btn" href="order.php?piece=<?php echo urlencode($p['variants'][0]['name']); ?>">
+              <div class="shop-price"><?php echo product_price_label((int) $p['price']); ?></div>
+              <p class="shop-meta"><?php echo htmlspecialchars($p['dims']); ?></p>
+              <a class="btn-coral shop-order-btn" href="order.php?piece=<?php echo urlencode($p['name']); ?>">
                 Order Now
               </a>
             </div>
@@ -175,8 +171,8 @@ require_once __DIR__ . '/includes/header.php';
               </div>
               <div class="promo-tile-info">
                 <strong><?php echo htmlspecialchars($p['short']); ?></strong>
-                <span>Pot <?php echo htmlspecialchars($p['pot_dims']); ?><?php echo !empty($p['has_base']) ? ' · Base ' . htmlspecialchars($p['base_dims']) : ''; ?></span>
-                <a class="btn-coral" href="order.php?piece=<?php echo urlencode($p['variants'][0]['name']); ?>">Order Now</a>
+                <span><?php echo product_price_label((int) $p['price']); ?> · <?php echo htmlspecialchars($p['dims']); ?></span>
+                <a class="btn-coral" href="order.php?piece=<?php echo urlencode($p['name']); ?>">Order Now</a>
               </div>
             </article>
           <?php endforeach; ?>
