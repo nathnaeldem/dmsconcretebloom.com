@@ -60,11 +60,7 @@ require_once __DIR__ . '/includes/header.php';
   <section class="section" style="padding-top:0.5rem;">
     <div class="container order-grid">
       <aside class="order-aside reveal">
-        <h2>Talk to us directly</h2>
-        <p>
-          Prefer a call? We’re happy to help with sizes, finishes, freight, and custom pieces
-          across <?php echo htmlspecialchars($site_service_area); ?>.
-        </p>
+        
 
         <div class="order-contact-cards">
           <a class="order-contact-card" href="tel:<?php echo htmlspecialchars($site_phone_href); ?>">
