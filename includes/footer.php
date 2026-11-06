@@ -1,23 +1,21 @@
 <?php if (!isset($site_name)) { require_once __DIR__ . '/config.php'; } ?>
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <a class="brand" href="index.php">
-            <span class="brand-mark" aria-hidden="true"><i class="bi bi-flower2"></i></span>
-            <span class="brand-name"><?php echo htmlspecialchars($site_name); ?> Studio</span>
-          </a>
-          <p class="footer-tagline"><?php echo htmlspecialchars($site_tagline); ?></p>
+      <div class="footer-bar">
+        <div class="footer-social" aria-label="Social links">
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="bi bi-pinterest"></i></a>
         </div>
-        <ul class="footer-nav">
-          <li><a href="index.php">Home</a></li>
-          <li><a href="about.php">About</a></li>
-          <li><a href="service.php">Service</a></li>
-          <li><a href="collection.php">Collection</a></li>
-          <li><a href="contact.php">Contact</a></li>
-        </ul>
-        <p class="footer-copy">&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($site_name); ?>. Handcrafted in <?php echo htmlspecialchars($site_service_area); ?>.</p>
+        <div class="footer-links">
+          <a href="contact.php">Contact</a>
+          <span class="footer-sep" aria-hidden="true"></span>
+          <a href="about.php">About</a>
+          <span class="footer-sep" aria-hidden="true"></span>
+          <a href="service.php">Craft</a>
+        </div>
       </div>
+      <p class="footer-copy">&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($site_name); ?>. Handcrafted in <?php echo htmlspecialchars($site_service_area); ?>.</p>
     </div>
   </footer>
 
@@ -57,7 +55,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <span>Wind Load Anchoring</span>
-            <strong class="text-success">110+ MPH Stable</strong>
+            <strong style="color:var(--leaf)">110+ MPH Stable</strong>
           </div>
         </div>
 

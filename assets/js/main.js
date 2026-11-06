@@ -2,6 +2,7 @@
   const panel = document.getElementById("navPanel");
   const toggle = document.querySelector(".nav-toggle");
   const closeBtn = document.querySelector(".nav-close");
+  const header = document.querySelector(".site-header");
 
   const setOpen = (open) => {
     if (!panel || !toggle) return;
@@ -20,6 +21,10 @@
   toggle?.addEventListener("click", () => setOpen(panel.hidden));
   closeBtn?.addEventListener("click", () => setOpen(false));
 
+  panel?.addEventListener("click", (e) => {
+    if (e.target === panel) setOpen(false);
+  });
+
   panel?.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => setOpen(false));
   });
@@ -27,6 +32,13 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && panel && !panel.hidden) setOpen(false);
   });
+
+  const onScroll = () => {
+    if (!header) return;
+    header.classList.toggle("is-scrolled", window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
 
   const toast = document.getElementById("toast");
   const toastMsg = document.getElementById("toast-msg");
@@ -41,6 +53,19 @@
   };
 
   window.showToast = showToast;
+
+  // Wishlist hearts
+  document.querySelectorAll(".wish-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const on = btn.classList.toggle("is-on");
+      const icon = btn.querySelector("i");
+      if (icon) {
+        icon.className = on ? "bi bi-heart-fill" : "bi bi-heart";
+      }
+      const name = btn.dataset.wish || "Planter";
+      showToast(on ? `Saved ${name}` : `Removed ${name}`);
+    });
+  });
 
   // Customizer modal
   let active = {
@@ -128,7 +153,7 @@
 
   requestAnimationFrame(() => {
     document
-      .querySelectorAll(".hero-panel.reveal, .page-hero .reveal, .category-grid .reveal")
+      .querySelectorAll(".hero-banner-copy.reveal, .hero-stage.reveal, .page-hero .reveal, .value-card.reveal")
       .forEach((el) => el.classList.add("in"));
   });
 })();

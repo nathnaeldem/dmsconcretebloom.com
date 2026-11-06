@@ -110,7 +110,7 @@ require_once __DIR__ . '/includes/header.php';
       <article class="story-block">
         <div class="story-media reveal">
           <img
-            src="assets/img/service-installation.jpg"
+            src="assets/img/hero-product-1.jpg"
             alt="Outdoor planter installation"
           >
         </div>
@@ -124,7 +124,7 @@ require_once __DIR__ . '/includes/header.php';
             Aesthetic finish: matures over time into an organic, natural-stone look.
           </p>
           <div class="cta-row">
-            <a class="btn-primary-solid" href="collection.php">Browse collection <i class="bi bi-arrow-right"></i></a>
+            <a class="btn-coral" href="collection.php">Browse collection <i class="bi bi-arrow-right"></i></a>
           </div>
         </div>
       </article>

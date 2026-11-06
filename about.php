@@ -38,8 +38,8 @@ require_once __DIR__ . '/includes/header.php';
       <article class="story-block">
         <div class="story-media reveal">
           <img
-            src="assets/img/hero.jpg"
-            alt="Welcoming outdoor living space with plants"
+            src="assets/img/product-heritage-ribbed.jpg"
+            alt="Heritage Ribbed Pot with pedestal in a garden setting"
           >
         </div>
         <div class="story-copy reveal reveal-delay-1">
@@ -58,7 +58,7 @@ require_once __DIR__ . '/includes/header.php';
       <article class="story-block reverse">
         <div class="story-media reveal">
           <img
-            src="assets/img/cat-benches.jpg"
+            src="assets/img/product-petal-garden.jpg"
             alt="Garden pathway lined with planters"
           >
         </div>
@@ -74,7 +74,7 @@ require_once __DIR__ . '/includes/header.php';
             simple outdoor areas into spaces where people truly want to spend time.
           </p>
           <div class="cta-row">
-            <a class="btn-primary-solid" href="service.php">Explore our craft <i class="bi bi-arrow-right"></i></a>
+            <a class="btn-coral" href="service.php">Explore our craft <i class="bi bi-arrow-right"></i></a>
             <a class="btn-outline-brand" href="contact.php">Talk to us</a>
           </div>
         </div>
@@ -83,7 +83,7 @@ require_once __DIR__ . '/includes/header.php';
       <article class="story-block">
         <div class="story-media reveal">
           <img
-            src="assets/img/cat-troughs.jpg"
+            src="assets/img/product-grand-scalloped.jpg"
             alt="Heavy concrete texture built for durability"
           >
         </div>
@@ -115,7 +115,7 @@ require_once __DIR__ . '/includes/header.php';
       <div class="band-cta reveal">
         <h2>Ready to transform your outdoors?</h2>
         <p>Custom sizes, finishes, and project-scale orders across Dallas–Fort Worth.</p>
-        <a class="btn-primary-solid" href="contact.php">Request a piece <i class="bi bi-arrow-right"></i></a>
+        <a class="btn-coral" href="order.php">Order a piece <i class="bi bi-arrow-right"></i></a>
       </div>
     </div>
   </section>

@@ -2,6 +2,7 @@
 $page_title = 'Contact';
 $page_description = 'Request a custom Concrete Bloom planter or ask about materials, sizing, and project timelines across Dallas–Fort Worth.';
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/products.php';
 
 $sent = false;
 $error = '';
@@ -82,7 +83,7 @@ require_once __DIR__ . '/includes/header.php';
         <?php if ($sent): ?>
           <div class="alert-ok" role="status">Thanks—your message is in. We’ll get back to you soon.</div>
           <div class="cta-row">
-            <a class="btn-primary-solid" href="collection.php">Back to collection</a>
+            <a class="btn-coral" href="collection.php">Back to collection</a>
             <a class="btn-outline-brand" href="index.php">Home</a>
           </div>
         <?php else: ?>
@@ -104,14 +105,7 @@ require_once __DIR__ . '/includes/header.php';
               <label for="interest">Interested in</label>
               <select id="interest" name="interest">
                 <?php
-                $options = [
-                  'General inquiry',
-                  'The Monolith Urn',
-                  'The Brutalist Trough',
-                  'The Zenith Cylinder',
-                  'The Cascade Planter',
-                  'Custom size',
-                ];
+                $options = product_order_options($products);
                 $selected = $_POST['interest'] ?? ($piece !== '' ? $piece : 'General inquiry');
                 foreach ($options as $opt):
                 ?>
@@ -125,7 +119,7 @@ require_once __DIR__ . '/includes/header.php';
               <label for="message">Project details</label>
               <textarea id="message" name="message" required placeholder="Space type, approximate size, finish preferences, timeline…"><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
             </div>
-            <button type="submit" class="btn-primary-solid">Send message <i class="bi bi-arrow-right"></i></button>
+            <button type="submit" class="btn-coral">Send message <i class="bi bi-arrow-right"></i></button>
           </form>
         <?php endif; ?>
       </div>
