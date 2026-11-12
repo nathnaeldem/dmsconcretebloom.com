@@ -91,7 +91,8 @@ require_once __DIR__ . '/includes/header.php';
         <?php foreach ($products as $i => $p): ?>
           <article class="shop-card reveal<?php echo $i ? ' reveal-delay-' . min($i, 3) : ''; ?>">
             <div class="shop-card-media">
-              <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['name']); ?>">
+              <span class="product-sku" aria-label="Product reference <?php echo htmlspecialchars($p['sku']); ?>"><?php echo htmlspecialchars($p['sku']); ?></span>
+              <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['sku'] . ' ' . $p['name']); ?>">
             </div>
             <div class="shop-card-body">
               <h3><?php echo htmlspecialchars($p['short']); ?></h3>
@@ -167,10 +168,11 @@ require_once __DIR__ . '/includes/header.php';
           <?php foreach ($products as $p): ?>
             <article class="promo-tile">
               <div class="promo-tile-media">
-                <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['name']); ?>">
+                <span class="product-sku" aria-label="Product reference <?php echo htmlspecialchars($p['sku']); ?>"><?php echo htmlspecialchars($p['sku']); ?></span>
+                <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['sku'] . ' ' . $p['name']); ?>">
               </div>
               <div class="promo-tile-info">
-                <strong><?php echo htmlspecialchars($p['short']); ?></strong>
+                <strong><span class="sku-inline"><?php echo htmlspecialchars($p['sku']); ?></span> <?php echo htmlspecialchars($p['short']); ?></strong>
                 <span><?php echo product_price_label((int) $p['price']); ?> · <?php echo htmlspecialchars($p['dims']); ?></span>
                 <a class="btn-coral" href="order.php?piece=<?php echo urlencode($p['name']); ?>">Order Now</a>
               </div>

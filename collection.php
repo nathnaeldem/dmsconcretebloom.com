@@ -22,10 +22,11 @@ require_once __DIR__ . '/includes/header.php';
         <?php foreach ($products as $i => $p): ?>
           <article class="catalog-card reveal<?php echo $i ? ' reveal-delay-' . min($i, 3) : ''; ?>" id="<?php echo htmlspecialchars($p['id']); ?>">
             <div class="catalog-media">
-              <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['name']); ?>">
+              <span class="product-sku" aria-label="Product reference <?php echo htmlspecialchars($p['sku']); ?>"><?php echo htmlspecialchars($p['sku']); ?></span>
+              <img src="<?php echo htmlspecialchars($p['image']); ?>" alt="<?php echo htmlspecialchars($p['sku'] . ' ' . $p['name']); ?>">
             </div>
             <div class="catalog-body">
-              <h3><?php echo htmlspecialchars($p['name']); ?></h3>
+              <h3><span class="sku-inline"><?php echo htmlspecialchars($p['sku']); ?></span> <?php echo htmlspecialchars($p['name']); ?></h3>
               <div class="shop-price"><?php echo product_price_label((int) $p['price']); ?></div>
               <p class="catalog-blurb"><?php echo htmlspecialchars($p['blurb']); ?></p>
 

@@ -3,6 +3,7 @@ $page_title = 'Contact';
 $page_description = 'Request a custom Concrete Bloom planter or ask about materials, sizing, and project timelines across Dallas–Fort Worth.';
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/products.php';
+require_once __DIR__ . '/includes/mailer.php';
 
 $sent = false;
 $error = '';
@@ -24,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       @mkdir($log_dir, 0755, true);
     }
     $entry = [
+      'type' => 'contact',
       'time' => date('c'),
       'name' => $name,
       'email' => $email,
@@ -35,8 +37,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       json_encode($entry, JSON_UNESCAPED_UNICODE) . PHP_EOL,
       FILE_APPEND | LOCK_EX
     );
-    $sent = true;
-    $piece = '';
+
+    $html = bloom_build_email_html(
+      'New contact inquiry',
+      [
+        'Customer name' => $name,
+        'Email' => $email,
+        'Interested in' => $interest,
+        'Message' => $message,
+        'Submitted' => date('M j, Y g:i A T'),
+      ],
+      'Reply directly to this email to reach the customer.'
+    );
+
+    $to = $site_orders_email ?? $site_email;
+    $mailed = bloom_send_mail($to, "New Contact Inquiry — {$name}", $html, $email);
+
+    if (!$mailed) {
+      $error = 'We saved your message, but email delivery failed. Please call us or try again.';
+    } else {
+      $sent = true;
+      $piece = '';
+    }
   }
 }
 

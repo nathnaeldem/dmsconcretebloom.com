@@ -1,11 +1,14 @@
 <?php
 $page_title = 'Order';
-$page_description = 'Order handcrafted DMS Concrete Bloom planters. Call us or send your name, email, and phone—we’ll follow up fast.';
+$page_description = 'Order handcrafted DMS Concrete Bloom pots. Call us or send your name, email, and phone—we’ll follow up fast.';
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/products.php';
+require_once __DIR__ . '/includes/mailer.php';
 
 $sent = false;
 $error = '';
 $piece = isset($_GET['piece']) ? trim($_GET['piece']) : '';
+$selected = find_product_by_piece($products, $piece);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $name = trim($_POST['name'] ?? '');
@@ -13,12 +16,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $phone = trim($_POST['phone'] ?? '');
   $message = trim($_POST['message'] ?? '');
   $interest = trim($_POST['piece'] ?? '');
+  $selected = find_product_by_piece($products, $interest) ?: $selected;
 
   if ($name === '' || $email === '' || $phone === '') {
     $error = 'Please fill in your name, email, and phone number.';
   } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $error = 'Please enter a valid email address.';
   } else {
+    $sku = $selected['sku'] ?? '';
+    $productLabel = $interest !== '' ? $interest : 'General order inquiry';
+    if ($selected) {
+      $productLabel = $selected['sku'] . ' ' . $selected['name'];
+    }
+
     $log_dir = __DIR__ . '/storage';
     if (!is_dir($log_dir)) {
       @mkdir($log_dir, 0755, true);
@@ -29,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'name' => $name,
       'email' => $email,
       'phone' => $phone,
-      'piece' => $interest,
+      'piece' => $productLabel,
+      'sku' => $sku,
       'message' => $message,
     ];
     @file_put_contents(
@@ -37,8 +48,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       json_encode($entry, JSON_UNESCAPED_UNICODE) . PHP_EOL,
       FILE_APPEND | LOCK_EX
     );
-    $sent = true;
-    $piece = '';
+
+    $rows = [
+      'Reference' => $sku !== '' ? $sku : 'N/A',
+      'Product' => $productLabel,
+      'Price' => isset($selected['price']) ? product_price_label((int) $selected['price']) : 'Quote',
+      'Dimensions' => $selected['dims'] ?? '',
+      'Customer name' => $name,
+      'Email' => $email,
+      'Phone' => $phone,
+      'Message' => $message !== '' ? $message : '(none)',
+      'Submitted' => date('M j, Y g:i A T'),
+    ];
+
+    $html = bloom_build_email_html(
+      'New order request',
+      $rows,
+      'Reply directly to this email to reach the customer.'
+    );
+
+    $to = $site_orders_email ?? $site_email;
+    $subject = 'New Order' . ($sku !== '' ? " {$sku}" : '') . " — {$name}";
+    $mailed = bloom_send_mail($to, $subject, $html, $email);
+
+    if (!$mailed) {
+      $error = 'We saved your request, but email delivery failed. Please call us or try again.';
+    } else {
+      $sent = true;
+      $piece = '';
+      $selected = null;
+    }
   }
 }
 
@@ -52,7 +91,7 @@ require_once __DIR__ . '/includes/header.php';
       <h1>Place your <span class="accent">order</span>.</h1>
       <p>
         Call us or send a quick form—name, email, and phone is all we need to get started.
-        Message is optional.
+        Mention product codes <strong>#001</strong>, <strong>#002</strong>, or <strong>#003</strong> when you call.
       </p>
     </div>
   </header>
@@ -60,8 +99,6 @@ require_once __DIR__ . '/includes/header.php';
   <section class="section" style="padding-top:0.5rem;">
     <div class="container order-grid">
       <aside class="order-aside reveal">
-        
-
         <div class="order-contact-cards">
           <a class="order-contact-card" href="tel:<?php echo htmlspecialchars($site_phone_href); ?>">
             <span class="order-contact-icon"><i class="bi bi-telephone-fill"></i></span>
@@ -99,11 +136,32 @@ require_once __DIR__ . '/includes/header.php';
             <div class="alert-err" role="alert"><?php echo htmlspecialchars($error); ?></div>
           <?php endif; ?>
           <h2 class="order-form-title">Order form</h2>
-          <?php if ($piece !== ''): ?>
+          <?php if ($selected): ?>
+            <p class="order-selected">
+              Ordering: <span class="sku-inline"><?php echo htmlspecialchars($selected['sku']); ?></span>
+              <strong><?php echo htmlspecialchars($selected['name']); ?></strong>
+              · <?php echo product_price_label((int) $selected['price']); ?>
+            </p>
+          <?php elseif ($piece !== ''): ?>
             <p class="order-selected">Ordering: <strong><?php echo htmlspecialchars($piece); ?></strong></p>
           <?php endif; ?>
           <form class="contact-form" method="post" action="order.php<?php echo $piece !== '' ? '?piece=' . urlencode($piece) : ''; ?>" novalidate>
-            <input type="hidden" name="piece" value="<?php echo htmlspecialchars($_POST['piece'] ?? $piece); ?>">
+            <div class="form-field">
+              <label for="piece_select">Product</label>
+              <select id="piece_select" name="piece">
+                <option value="">Select a product (optional)</option>
+                <?php
+                $currentPiece = $_POST['piece'] ?? ($selected['name'] ?? $piece);
+                foreach ($products as $p):
+                  $val = $p['name'];
+                  $label = $p['sku'] . ' — ' . $p['name'] . ' · ' . product_price_label((int) $p['price']);
+                ?>
+                  <option value="<?php echo htmlspecialchars($val); ?>" <?php echo $currentPiece === $val ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($label); ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
             <div class="form-field">
               <label for="name">Name <span class="req">*</span></label>
               <input type="text" id="name" name="name" required value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" placeholder="Your full name">
@@ -118,7 +176,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <div class="form-field">
               <label for="message">Message <span class="optional">(optional)</span></label>
-              <textarea id="message" name="message" placeholder="Size, finish, quantity, delivery notes…"><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
+              <textarea id="message" name="message" placeholder="Quantity, delivery notes, questions…"><?php echo htmlspecialchars($_POST['message'] ?? ''); ?></textarea>
             </div>
             <button type="submit" class="btn-coral w-100">Submit Order <i class="bi bi-arrow-up-right"></i></button>
           </form>
